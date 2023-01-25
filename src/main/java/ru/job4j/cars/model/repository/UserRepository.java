@@ -24,6 +24,7 @@ public class UserRepository {
     public User create(User user) {
         Session session = sf.openSession();
         try {
+            session.beginTransaction();
             session.save(user);
             session.getTransaction().commit();
         } catch (Exception e) {
