@@ -78,7 +78,6 @@ public class UserRepository {
         Session session = sf.openSession();
         Query<User> query = session.createQuery(FIND_BY_ID, User.class);
         query.setParameter("fId", id);
-        query.setMaxResults(1);
         rls = query.uniqueResultOptional();
         session.close();
         return rls;
@@ -98,7 +97,6 @@ public class UserRepository {
         Session session = sf.openSession();
         Query<User> query = session.createQuery(FIND_BY_LOGIN, User.class);
         query.setParameter("fLogin", login);
-        query.setMaxResults(1);
         rls = query.uniqueResultOptional();
         session.close();
         return rls;
