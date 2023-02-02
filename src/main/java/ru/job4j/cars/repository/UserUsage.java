@@ -1,4 +1,4 @@
-package ru.job4j.cars.model.repository;
+package ru.job4j.cars.repository;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -21,7 +21,7 @@ public class UserUsage {
                     .forEach(System.out::println);
             userRepository.findByLikeLogin("e")
                     .forEach(System.out::println);
-           userRepository.findById(user.getId())
+            userRepository.findById(user.getId())
                     .ifPresent(System.out::println);
             userRepository.findByLogin("admin")
                     .ifPresent(System.out::println);

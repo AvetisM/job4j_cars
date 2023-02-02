@@ -1,4 +1,4 @@
-package ru.job4j.cars.model.repository;
+package ru.job4j.cars.repository;
 
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import ru.job4j.cars.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +30,9 @@ public class UserRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
-        session.close();
         return user;
     }
 
@@ -44,11 +46,11 @@ public class UserRepository {
                     .setParameter("fId", user.getId())
                     .executeUpdate();
             session.getTransaction().commit();
-
         } catch (Exception e) {
             session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
-        session.close();
     }
 
     public void delete(int userId) {
@@ -59,47 +61,61 @@ public class UserRepository {
                     .setParameter("fId", userId)
                     .executeUpdate();
             session.getTransaction().commit();
-
         } catch (Exception e) {
             session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
-        session.close();
     }
 
     public List<User> findAllOrderById() {
         Session session = sf.openSession();
-        Query<User> query = session.createQuery(FIND_ALL_ORDER_ID);
-        List<User> rls = query.list();
-        session.close();
-        return rls;
+        try {
+            Query<User> query = session.createQuery(FIND_ALL_ORDER_ID, User.class);
+            return query.list();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        } finally {
+            session.close();
+        }
     }
 
     public Optional<User> findById(int id) {
-        Optional<User> rls;
         Session session = sf.openSession();
-        Query<User> query = session.createQuery(FIND_BY_ID, User.class);
-        query.setParameter("fId", id);
-        rls = query.uniqueResultOptional();
-        session.close();
-        return rls;
+        try {
+            Query<User> query = session.createQuery(FIND_BY_ID, User.class);
+            query.setParameter("fId", id);
+            return query.uniqueResultOptional();
+        } catch (Exception e) {
+            return Optional.empty();
+        } finally {
+            session.close();
+        }
     }
 
     public List<User> findByLikeLogin(String key) {
         Session session = sf.openSession();
-        Query<User> query = session.createQuery(FIND_BY_LIKE_LOGIN);
-        query.setParameter("fLogin", "%" + key + "%");
-        List<User> rls = query.list();
-        session.close();
-        return rls;
+        try {
+            Query<User> query = session.createQuery(FIND_BY_LIKE_LOGIN, User.class);
+            query.setParameter("fLogin", "%" + key + "%");
+            return query.list();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        } finally {
+            session.close();
+        }
     }
 
     public Optional<User> findByLogin(String login) {
-        Optional<User> rls;
         Session session = sf.openSession();
-        Query<User> query = session.createQuery(FIND_BY_LOGIN, User.class);
-        query.setParameter("fLogin", login);
-        rls = query.uniqueResultOptional();
-        session.close();
-        return rls;
+        try {
+            Query<User> query = session.createQuery(FIND_BY_LOGIN, User.class);
+            query.setParameter("fLogin", login);
+            return query.uniqueResultOptional();
+        } catch (Exception e) {
+            return Optional.empty();
+        } finally {
+            session.close();
+        }
     }
 }
