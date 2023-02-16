@@ -29,6 +29,10 @@ public class Post {
     @JoinColumn(name = "price_history_id")
     private List<PriceHistory> priceHistories;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "car_id")
+    private Car car;
+
     @ManyToMany
     @JoinTable(
             name = "participates",
