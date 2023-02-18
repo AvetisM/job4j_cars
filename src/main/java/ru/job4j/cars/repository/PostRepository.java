@@ -28,7 +28,7 @@ public class PostRepository {
             "FROM Post Fetch Car as car WHERE car = :car";
 
     private static final String FIND_POST_WITH_PHOTO =
-            "FROM Post WHERE NOT photo IS NULL and octet_length(photo) > 0";
+            "FROM Post WHERE photo IS NOT NULL and octet_length(photo) > 0";
 
     private final CrudRepository crudRepository;
 
@@ -62,9 +62,8 @@ public class PostRepository {
     }
 
     public List<Post> findPostsForLastDay() {
-        LocalDate currentDate = LocalDate.now().minusDays(1);
-        LocalDateTime startDate = LocalDateTime.of(currentDate, LocalTime.MIN);
-        LocalDateTime endDate = LocalDateTime.of(currentDate, LocalTime.MAX);
+        LocalDateTime startDate = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+        LocalDateTime endDate = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
         return crudRepository.query(FIND_POST_FOR_THE_LAST_DAY, Post.class,
                 Map.of("startDate", startDate, "endDate", endDate));
     }
