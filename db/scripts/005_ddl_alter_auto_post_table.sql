@@ -1,1 +1,0 @@
-ALTER TABLE auto_post ADD COLUMN price_history_id int not null references price_history(id)

@@ -1,6 +1,7 @@
 package ru.job4j.cars.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,6 +14,8 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
+@Builder(builderMethodName = "of")
+@Table(name = "auto_post")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +30,8 @@ public class Post {
     @JoinColumn(name = "auto_user_id")
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "price_history_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "auto_post_id")
     private List<PriceHistory> priceHistories;
 
     @OneToOne(cascade = CascadeType.ALL)

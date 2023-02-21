@@ -4,16 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "price_history")
 public class PriceHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +21,5 @@ public class PriceHistory {
     private long before;
     private long after;
     private LocalDateTime created;
+
 }

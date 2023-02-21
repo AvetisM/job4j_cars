@@ -9,7 +9,7 @@
     <include file="scripts/002_ddl_create_auto_post_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/003_dml_update_auto_user.sql" relativeToChangelogFile="true"/>
     <include file="scripts/004_ddl_create_price_history_table.sql" relativeToChangelogFile="true"/>
-    <include file="scripts/005_ddl_alter_auto_post_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/005_ddl_alter_price_history_table_add_auto_post_id_column.sql" relativeToChangelogFile="true"/>
     <include file="scripts/006_dll_create_participates_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/007_ddl_create_engines_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/008_ddl_create_cars_table.sql" relativeToChangelogFile="true"/>

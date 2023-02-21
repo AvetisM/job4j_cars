@@ -20,7 +20,7 @@ public class Car {
     private int id;
     @EqualsAndHashCode.Include
     private String name;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "engine_id", foreignKey = @ForeignKey(name = "ENGINE_ID_FK"))
     private Engine engine;
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

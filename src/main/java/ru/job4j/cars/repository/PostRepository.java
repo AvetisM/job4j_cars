@@ -23,22 +23,22 @@ public class PostRepository {
 
     private static final String FIND_POST_FOR_THE_LAST_DAY =
             "FROM Post WHERE created between :startDate and :endDate";
-
     private static final String FIND_POST_BY_CAR =
             "FROM Post Fetch Car as car WHERE car = :car";
-
     private static final String FIND_POST_WITH_PHOTO =
             "FROM Post WHERE photo IS NOT NULL and octet_length(photo) > 0";
-
+    private static final String FIND_ALL_POSTS = "FROM Post";
+    private static final String FIND_POST_BY_ID = "FROM Post WHERE id = :id";
+    private static final String DELETE_POST_BY_ID = "DELETE Post WHERE id = :id";
     private final CrudRepository crudRepository;
 
-    public Optional<Post> add(Post post) {
+    public boolean add(Post post) {
         try {
             crudRepository.run(session -> session.persist(post));
-            return Optional.of(post);
+            return true;
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            return Optional.empty();
+            return false;
         }
     }
 
@@ -50,6 +50,30 @@ public class PostRepository {
             LOG.error(e.getMessage(), e);
             return false;
         }
+    }
+
+    public boolean delete(int id) {
+        try {
+            crudRepository.run(
+                    DELETE_POST_BY_ID,
+                    Map.of("id", id)
+            );
+            return true;
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            return false;
+        }
+    }
+
+    public List<Post> findAll() {
+        return crudRepository.query(FIND_ALL_POSTS, Post.class);
+    }
+
+    public Optional<Post> findById(int id) {
+        return crudRepository.optional(
+                FIND_POST_BY_ID, Post.class,
+                Map.of("id", id)
+        );
     }
 
     public List<Post> findPostsByCar(Car car) {
