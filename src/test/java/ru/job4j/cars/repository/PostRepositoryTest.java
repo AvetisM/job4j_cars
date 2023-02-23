@@ -6,7 +6,6 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +18,7 @@ import ru.job4j.cars.util.CrudRepository;
 import java.time.LocalDateTime;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -35,6 +35,7 @@ class PostRepositoryTest {
     private PostService postService;
     private PostRepository postRepository;
     private Post testPost;
+    private Car testCar;
 
     @BeforeEach
     void initServices() {
@@ -45,17 +46,16 @@ class PostRepositoryTest {
         User user = new User(0, "User1", "1");
         Engine engine = new Engine(0, "2.0 л / 184 л.с. / Бензин");
         Driver driver = new Driver(0, "Driver1", user);
-        Car car = new Car(0, "BMW 520i", engine, Set.of(driver));
+        testCar  = new Car(0, "BMW 520i", engine, Set.of(driver));
         PriceHistory priceHistory =
                 new PriceHistory(0, 12200000, 1100000, LocalDateTime.now());
-
         testPost = Post.of()
                 .id(0)
                 .description("BMW 5 серии 520i VI (F10/F11/F07) Рестайлинг")
                 .created(LocalDateTime.now())
                 .photo(new byte[] {1, 2, 3})
                 .user(user)
-                .car(car)
+                .car(testCar)
                 .priceHistories(Arrays.asList(priceHistory))
                 .build();
     }
@@ -69,6 +69,26 @@ class PostRepositoryTest {
     public void wipeTable() {
         Session session = sf.openSession();
         try {
+            session.beginTransaction();
+            session.createQuery("delete from Engine")
+                    .executeUpdate();
+            session.getTransaction().commit();
+
+            session.beginTransaction();
+            session.createQuery("delete from Driver")
+                    .executeUpdate();
+            session.getTransaction().commit();
+
+            session.beginTransaction();
+            session.createQuery("delete from Car")
+                    .executeUpdate();
+            session.getTransaction().commit();
+
+            session.beginTransaction();
+            session.createQuery("delete from User")
+                    .executeUpdate();
+            session.getTransaction().commit();
+
             session.beginTransaction();
             session.createQuery("delete from Post")
                     .executeUpdate();
@@ -90,17 +110,33 @@ class PostRepositoryTest {
 
     @Test
     void update() {
+        postService.add(testPost);
+        testPost.setDescription("BMW 5 серии 520i");
+        Assertions.assertTrue(postService.update(testPost));
+        Optional<Post> result = postService.findById(testPost.getId());
+        Assertions.assertTrue(result.isPresent());
+        assertThat(result.get().getDescription(), is("BMW 5 серии 520i"));
     }
 
     @Test
     void findPostsByCar() {
+        postService.add(testPost);
+        List<Post> result = postService.findPostsByCar(testCar);
+        Assertions.assertEquals(1, result.size());
+        assertThat(result.get(0).getDescription(), is(testPost.getDescription()));
     }
 
     @Test
     void findPostsWithPhoto() {
+        postService.add(testPost);
+        List<Post> result = postService.findPostsWithPhoto();
+        Assertions.assertTrue(result.size() > 0);
     }
 
     @Test
     void findPostsForLastDay() {
+        postService.add(testPost);
+        List<Post> result = postService.findPostsForLastDay();
+        Assertions.assertTrue(result.size() > 0);
     }
 }

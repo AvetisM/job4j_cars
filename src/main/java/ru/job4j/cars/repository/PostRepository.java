@@ -24,7 +24,7 @@ public class PostRepository {
     private static final String FIND_POST_FOR_THE_LAST_DAY =
             "FROM Post WHERE created between :startDate and :endDate";
     private static final String FIND_POST_BY_CAR =
-            "FROM Post Fetch Car as car WHERE car = :car";
+            "FROM Post WHERE car = :car";
     private static final String FIND_POST_WITH_PHOTO =
             "FROM Post WHERE photo IS NOT NULL and octet_length(photo) > 0";
     private static final String FIND_ALL_POSTS = "FROM Post";
